@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-export const ChartPreview = ({ chartValues, id }) => {
+export const ChartPreview = ({ chartValues, id, isSmall }) => {
   const canvasRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
   useEffect(() => {
-    const renderLineChart = (canvasRef, chartValues) => {
+    const renderLineChart = (canvasRef, chartValues=[]) => {
       const data = {
         datasets: [
           {
@@ -16,14 +16,14 @@ export const ChartPreview = ({ chartValues, id }) => {
             borderColor: '#2e5ce5',
             fill: false,
             tension: 0.1,
-            pointRadius: 1,
-            pointBackgroundColor: 'rgb(0, 0, 255)',
+            pointRadius: 0,
+            // pointBackgroundColor: 'rgb(0, 0, 255)',
           },
         ],
       };
 
       const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-      const labels = ['', ...months, '2020', ...months, '2021', ...months, '2023', ...months, '2024', 'FEB'];
+      const labels = ['', ...months, isSmall ? '' : '2020', ...months, isSmall ? '' : '2021', ...months, isSmall ? '' : '2023', ...months, isSmall ? '' : '2024', 'FEB'];
 
       const options = {
         scales: {
@@ -35,6 +35,7 @@ export const ChartPreview = ({ chartValues, id }) => {
             },
             border: {
               display: false,
+              drawBorder: false
             },
             ticks: {
               color: '#d3ddf5',
@@ -76,7 +77,11 @@ export const ChartPreview = ({ chartValues, id }) => {
           tooltip: {
             enabled: false,
           },
+          
         },
+        animation: {
+          duration: 0
+      }
       };
 
       const ctx = canvasRef.current.getContext('2d');
@@ -106,7 +111,7 @@ export const ChartPreview = ({ chartValues, id }) => {
 
   return (
     <div className="chartPreview">
-      <canvas height={150} width={300} ref={canvasRef} id={id} />
+      <canvas height={ isSmall? 40: 150} width={isSmall ? 200 : 300} ref={canvasRef} id={id} />
     </div>
   );
 };

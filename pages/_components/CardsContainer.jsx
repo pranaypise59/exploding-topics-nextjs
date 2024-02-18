@@ -1,9 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "./Card";
 import { cardsData } from "../_utils/data";
-import { generateRandomArray } from "../_utils/helpers";
 
 const CardsContainer = () => {
   return (

@@ -1,8 +1,7 @@
 import ChartComponent from "@/pages/_components/Chart";
 import CustomTooltip from "@/pages/_components/CustomTooltip";
-import { ChartPreview } from "@/pages/_components/PreviewChart";
+import RelatedTopics from "@/pages/_components/RelatedTopics";
 import { cardsData } from "@/pages/_utils/data";
-import { generateRandomArray } from "@/pages/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -415,7 +414,7 @@ const Topic = (props) => {
                   </a>
                 </div>
               </div>
-              <div className="topicTileSkeleton ">
+              {/* <div className="topicTileSkeleton ">
                 <div className="tile_skeleton project_tileSkeleton w_full">
                   <div className="pro_tile_row">
                     <div className="pro_tile_row_left">
@@ -478,7 +477,8 @@ const Topic = (props) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
+              <RelatedTopics />
             </div>
           </div>
         </div>
