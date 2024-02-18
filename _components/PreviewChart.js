@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-export const ChartPreview = ({ chartValues, id, isSmall }) => {
+const ChartPreview = ({ chartValues, id, isSmall }) => {
   const canvasRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
@@ -115,3 +115,5 @@ export const ChartPreview = ({ chartValues, id, isSmall }) => {
     </div>
   );
 };
+
+export default ChartPreview;

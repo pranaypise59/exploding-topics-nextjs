@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import React from "react";
-import { ChartPreview } from "./PreviewChart";
 import { generateRandomArray } from "../_utils/helpers";
 import { cardsData } from "../_utils/data";
 import Link from "next/link";
+import ChartPreview from "./PreviewChart";
 
 const RelatedTopics = () => {
   return (

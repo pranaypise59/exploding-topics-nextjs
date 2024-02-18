@@ -1,13 +1,13 @@
-import ChartComponent from "@/pages/_components/Chart";
-import CustomTooltip from "@/pages/_components/CustomTooltip";
-import RelatedTopics from "@/pages/_components/RelatedTopics";
-import { cardsData } from "@/pages/_utils/data";
+
+import ChartComponent from "@/_components/Chart";
+import CustomTooltip from "@/_components/CustomTooltip";
+import RelatedTopics from "@/_components/RelatedTopics";
+import { cardsData } from "@/_utils/data";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
-const Topic = (props) => {
+const Topic = () => {
     const router = useRouter();
     const { cardId } = router.query;
     const topic = cardsData.find((card) => card.id === cardId);

@@ -1,10 +1,5 @@
-/* eslint-disable react/no-unescaped-entities */
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import CardsContainer from "./_components/CardsContainer";
 import Link from "next/link";
-
-const inter = Inter({ subsets: ["latin"] });
+import CardsContainer from "@/_components/CardsContainer";
 
 export default function Home() {
   return (

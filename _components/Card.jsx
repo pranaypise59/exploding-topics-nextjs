@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from "react";
-import { ChartPreview } from "./PreviewChart";
 import { generateRandomArray } from "../_utils/helpers";
+import ChartPreview from "./PreviewChart";
 const CommonTileInfo = ({ label, volume, growth, description, chartValues, id }) => (
   <div className="tileInnerContainer">
     <div className="tileTopInfoContainer">
@@ -27,7 +27,7 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, id })
     </div>
     <div className="tileChartContainer">
       <div className="chartJsContainer">
-        <ChartPreview chartValues={chartValues} id={id}/>
+        <ChartPreview chartValues={chartValues} id={id} />
       </div>
       <div className="tileBottomInfoContainer">
         <div className="tileDescription">{description}</div>

@@ -238,7 +238,7 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
 };
 
 // Functional component
-const YourComponent = () => {
+const ChartComponent = () => {
   const canvasRef = useChartRef();
   const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
@@ -257,4 +257,4 @@ useEffect(() => {
   );
 };
 
-export default YourComponent;
+export default ChartComponent;
