@@ -1,6 +1,8 @@
 import ChartComponent from "@/pages/_components/Chart";
 import CustomTooltip from "@/pages/_components/CustomTooltip";
+import { ChartPreview } from "@/pages/_components/PreviewChart";
 import { cardsData } from "@/pages/_utils/data";
+import { generateRandomArray } from "@/pages/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

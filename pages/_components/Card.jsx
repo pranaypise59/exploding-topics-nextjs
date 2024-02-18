@@ -1,6 +1,8 @@
-import React from "react";
-
-const CommonTileInfo = ({ label, volume, growth, description }) => (
+'use client';
+import React, { useEffect, useRef, useState } from "react";
+import { ChartPreview } from "./PreviewChart";
+import { generateRandomArray } from "../_utils/helpers";
+const CommonTileInfo = ({ label, volume, growth, description, chartValues, chartRef }) => (
   <div className="tileInnerContainer">
     <div className="tileTopInfoContainer">
       <div className="tileKeywordContainer">
@@ -25,7 +27,8 @@ const CommonTileInfo = ({ label, volume, growth, description }) => (
     </div>
     <div className="tileChartContainer">
       <div className="chartJsContainer">
-        <canvas height={150} width={300} id="canvas" />
+        {/* <canvas height={150} width={300} id="canvas" /> */}
+        <ChartPreview chartValues={chartValues} key={label} label={label} chartRef={chartRef}/>
       </div>
       <div className="tileBottomInfoContainer">
         <div className="tileDescription">{description}</div>
@@ -43,10 +46,19 @@ const CommonTileInfo = ({ label, volume, growth, description }) => (
     </div>
   </div>
 );
+const useChartRef = () => {
+  const canvasRef = useRef(null);
+  return canvasRef;
+};
+const Card = ({ label, volume, growth, description, isPro = false, id}) => {
+  const chartRef = useRef(null);
 
-const Card = ({ label, volume, growth, description, isPro = false, id }) => {
+  const [ chartValues, setChartValues ] = useState([]);
+  useEffect(() => {
+    setChartValues(generateRandomArray(100, 500));
+  }, [chartRef])
   const commonTileInfo = (
-    <CommonTileInfo {...{ label, volume, growth, description }} />
+    <CommonTileInfo {...{ label, volume, growth, description, chartValues, chartRef }} />
   );
 
   return !isPro ? (

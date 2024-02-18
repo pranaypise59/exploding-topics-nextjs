@@ -1,5 +1,5 @@
 // Import necessary dependencies
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
 import { generateRandomArray } from '../_utils/helpers';
@@ -138,13 +138,13 @@ const externalTooltipHandler = (context) => {
   };
   
 // Function to render line chart
-const renderLineChart = (canvasRef) => {
+const renderLineChart = (canvasRef, chartValues) => {
   // Dummy data for the chart
   const data = {
     datasets: [
       {
         label: 'My Dataset',
-       data : generateRandomArray(100, 1000),
+       data : chartValues,
 
         borderColor: '#2e5ce5', // Blue color for the line
         fill: false, // To have an unfilled line
@@ -154,9 +154,9 @@ const renderLineChart = (canvasRef) => {
       },
     ],
   };
-
+const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
   // Options for the chart
-  const labels = ['', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','2020', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2021', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2022', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2023', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','2024', 'FEB']
+  const labels = ['', ...months ,'2020', ...months, '2021', ...months, '2023', ...months,'2024', 'FEB']
   const options = {  
       
     scales: {
@@ -173,7 +173,6 @@ const renderLineChart = (canvasRef) => {
         ticks:{
             // maxTicksLimit: 7,
             callback: function (props) {
-                console.log(props,'hello props')
                 const display = [12, 24, 36, 48, 60]
                 return display.includes(props) ? labels[props] : null; // Add 'k' to values greater than zero
               },
@@ -191,7 +190,7 @@ const renderLineChart = (canvasRef) => {
         // beginAtZero: true, // Start the y-axis from zero
         ticks: {
           maxTicksLimit: 5, // Set the maximum number of ticks to 5
-          stepSize: 20, // Set the step size for y-axis values
+          stepSize: Math.round(Math.max(...chartValues)/6), // Set the step size for y-axis values as per the max value received for that chart
           color:'#d3ddf5',
           callback: function (value, index, values) {
             return value === 0 ? '' : value + 'k'; // Add 'k' to values greater than zero
@@ -240,15 +239,18 @@ const renderLineChart = (canvasRef) => {
 // Functional component
 const YourComponent = () => {
   const canvasRef = useChartRef();
-
+  const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
-    renderLineChart(canvasRef);
-  }, [canvasRef]); // Include canvasRef in the dependencies array to ensure it's up-to-date
+    renderLineChart(canvasRef, chartValues);
+}, [canvasRef, chartValues]); // Include canvasRef in the dependencies array to ensure it's up-to-date
 
+useEffect(() => {
+    setChartValues(generateRandomArray(0, 500));
+  },[])
   return (
     <div className="tileChartContainer topicPageTileChartContainer">
       <div className="chartJsContainer">
-        <canvas height={150} width={300} id="canvas" ref={canvasRef} />
+        <canvas height={150} width={300} chartId={label} id="canvas" ref={canvasRef} />
       </div>
     </div>
   );
