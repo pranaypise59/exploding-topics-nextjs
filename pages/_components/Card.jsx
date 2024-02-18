@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChartPreview } from "./PreviewChart";
 import { generateRandomArray } from "../_utils/helpers";
-const CommonTileInfo = ({ label, volume, growth, description, chartValues, chartRef }) => (
+const CommonTileInfo = ({ label, volume, growth, description, chartValues, id }) => (
   <div className="tileInnerContainer">
     <div className="tileTopInfoContainer">
       <div className="tileKeywordContainer">
@@ -27,8 +27,7 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, chart
     </div>
     <div className="tileChartContainer">
       <div className="chartJsContainer">
-        {/* <canvas height={150} width={300} id="canvas" /> */}
-        <ChartPreview chartValues={chartValues} key={label} label={label} chartRef={chartRef}/>
+        <ChartPreview chartValues={chartValues} id={id}/>
       </div>
       <div className="tileBottomInfoContainer">
         <div className="tileDescription">{description}</div>
@@ -58,7 +57,7 @@ const Card = ({ label, volume, growth, description, isPro = false, id}) => {
     setChartValues(generateRandomArray(100, 500));
   }, [chartRef])
   const commonTileInfo = (
-    <CommonTileInfo {...{ label, volume, growth, description, chartValues, chartRef }} />
+    <CommonTileInfo {...{ label, volume, growth, description, chartValues, id }} />
   );
 
   return !isPro ? (

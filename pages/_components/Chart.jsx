@@ -172,6 +172,7 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
           },
         ticks:{
             // maxTicksLimit: 7,
+            color:'#d3ddf5',
             callback: function (props) {
                 const display = [12, 24, 36, 48, 60]
                 return display.includes(props) ? labels[props] : null; // Add 'k' to values greater than zero
@@ -250,7 +251,7 @@ useEffect(() => {
   return (
     <div className="tileChartContainer topicPageTileChartContainer">
       <div className="chartJsContainer">
-        <canvas height={150} width={300} chartId={label} id="canvas" ref={canvasRef} />
+        <canvas height={150} width={300} id="canvas" ref={canvasRef} />
       </div>
     </div>
   );
