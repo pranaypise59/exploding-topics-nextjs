@@ -43011,3 +43011,7 @@ top: 20px;
   rotate: 45deg;
   z-index: -1;
 }
+
+.scoreQuestionIcon{
+  fill: blue !important;
+}
