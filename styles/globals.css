@@ -42979,3 +42979,35 @@ input.noAutofillStyle:focus-within:-webkit-autofill {
   opacity: .75;
   color: black;
 }
+
+.customTooltipHelp{
+left: 50%;
+transform:translateX(-47%);
+top: 20px;
+}
+
+.customTooltipHelp::before{
+  content:'';
+  position: absolute;
+  top:0px;
+  left: 48%;
+  transform:translateX(-50%);
+  background-color: #121737;
+  height: 10px;
+  width:10px;
+  rotate: 45deg;
+  z-index: -1;
+}
+
+.chartJsContainer > div::before{
+  content:'';
+  position: absolute;
+  bottom:-9px;
+  left: 48%;
+  transform:translateX(-50%);
+  background-color: #d6e9fb;
+  height: 10px;
+  width:10px;
+  rotate: 45deg;
+  z-index: -1;
+}

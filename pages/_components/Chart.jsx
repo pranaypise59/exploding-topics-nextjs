@@ -1,6 +1,7 @@
 // Import necessary dependencies
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import CustomTooltip from './CustomTooltip';
 
 // Custom hook for managing the chart's canvas reference
 const useChartRef = () => {
@@ -8,6 +9,115 @@ const useChartRef = () => {
   return canvasRef;
 };
 
+const getCustomTooldtip = () => {
+    return <CustomTooltip text='Global Google search volume for this selected datapoint.'/>
+};
+
+const getOrCreateTooltip = (chart) => {
+    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    
+    if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.style.backgroundColor = '#d6e9fb'
+      tooltipEl.style.borderRadius = '3px';
+      tooltipEl.style.color = 'white';
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = 'none';
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.transform = 'translate(-50%, 0)';
+      tooltipEl.style.transition = 'all .1s ease';
+  
+      const table = document.createElement('table');
+      table.style.margin = '0px';
+  
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+  
+    return tooltipEl;
+  };
+
+const externalTooltipHandler = (context) => {
+    // Tooltip Element
+    const { chart, tooltip } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
+  
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
+  
+    // Set Text
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map(b => b.lines);
+  
+      const tableHead = document.createElement('thead');
+  
+      titleLines.forEach(title => {
+        const tr = document.createElement('tr');
+        tr.style.borderWidth = 0;
+        tr.style.color = 'black';
+        tr.style.textAlign = 'center';
+        tr.style.fontWeight = 'normal';
+        
+        
+        const th = document.createElement('th');
+        th.style.fontWeight = 'normal';
+        th.style.fontSize = '12px';
+        th.style.borderWidth = 0;
+        const text = document.createTextNode(isNaN(title) ? title : 'JAN');
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(tr);
+      });
+  
+      const tableBody = document.createElement('tbody');
+      bodyLines.forEach((body, i) => {
+  
+        const tr = document.createElement('tr');
+        tr.style.color = '#2e5ce5';
+        tr.style.fontWeight = 'bold';
+        tr.style.textAlign = 'center';
+        tr.style.fontSize = '18px';
+        tr.style.borderWidth = 0;
+  
+        const td = document.createElement('td');
+        td.style.borderWidth = 0;
+  
+        const numericPart = body[0].match(/[\d,]+/);
+        const bottomText = `${numericPart}K/mo`
+        const contentSpan = document.createElement('span');
+        // contentSpan.innerHTML = bottomText + getCustomTooldtip();
+        contentSpan.innerHTML = bottomText;
+        td.appendChild(contentSpan);
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+      });
+  
+      const tableRoot = tooltipEl.querySelector('table');
+  
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+  
+      // Add new children
+      tableRoot.appendChild(tableHead);
+      tableRoot.appendChild(tableBody);
+    }
+  
+    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+  
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+    tooltipEl.style.top = positionY + tooltip.caretY - 65 + 'px';
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.padding = `${tooltip.options.padding + tooltip.options.padding - 5 + 'px'} ${tooltip.options.padding + tooltip.options.padding + 20 +  'px'}`;
+  };
+  
 // Function to render line chart
 const renderLineChart = (canvasRef) => {
   // Dummy data for the chart
@@ -15,15 +125,7 @@ const renderLineChart = (canvasRef) => {
     datasets: [
       {
         label: 'My Dataset',
-       data : [
-        0, 500, 1000, 1500, 2000, 3000, 3500, 4000, 4500, 5000, 6000, 6500, 7000, 7500, 8000, // 0 to 14 correspond to '0'
-        8000, 8500, 9000, 9500, 8000, 7000, 6500, 6000, 5500, 5000, 4000, 3500, 3000, 2500, 2000, // 15 to 29 correspond to '2020'
-        2000, 2500, 3000, 3500, 4000, 5000, 5500, 6000, 6500, 7000, 8000, 8500, 9000, 9500, 8000, // 30 to 44 correspond to '2021'
-        8000, 8500, 9000, 9500, 8000, 7000, 6500, 6000, 5500, 5000, 4000, 3500, 3000, 2500, 2000, // 45 to 59 correspond to '2021'
-        2000, 2500, 3000, 3500, 4000, 5000, 5500, 6000, 6500, 7000, 8000, 8500, 9000, 9500, 8000, // 60 to 74 correspond to '2022'
-        8000, 8500, 9000, 9500, 8000, 7000, 6500, 6000, 5500, 5000, 4000, 3500, 3000, 2500, 2000, // 75 to 89 correspond to '2023'
-        2000, 2500, 3000, 3500, 4000, 5000, 5500, 6000, 6500, 7000, 8000, 8500, 9000, 9500, 8000, // 90 to 104 correspond to '2024'
-      ],
+       data : [0,25,41,93,69,87,62,24,85,59,32,55,65,77,59,42,38,20,96,54,100,100,76,66,34,76,85,87,90,83,20,67,30,19,70,28,55,41,55,46,14,35,83,92,19,18,70,80,88,39,86,91,48,89,57,16,85,27,55,41,19,46],
 
         borderColor: '#2e5ce5', // Blue color for the line
         fill: false, // To have an unfilled line
@@ -35,29 +137,51 @@ const renderLineChart = (canvasRef) => {
   };
 
   // Options for the chart
-  const options = {    
+  const labels = ['', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','2020', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2021', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2022', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2023', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','2024', 'FEB']
+  const options = {  
+      
     scales: {
+        
       x: {
         type: 'category',
-        labels: ['', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2020', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', '2023', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','2024', 'FEB'],
+        labels: labels,
         grid: {
-          display: false, // Hide vertical grid lines
+          display: false,
+        },
+        border: {
+            display: false,
+          },
+        ticks:{
+            // maxTicksLimit: 7,
+            callback: function (props) {
+                console.log(props,'hello props')
+                const display = [12, 24, 36, 48, 60]
+                return display.includes(props) ? labels[props] : null; // Add 'k' to values greater than zero
+              },
         },
       },
       y: {
+        grid: {
+            color: '#d3ddf5',
+        },
+        border: {
+            display: false,
+            drawBorder: false,
+            dash: [4,4],
+          },
         // beginAtZero: true, // Start the y-axis from zero
         ticks: {
           maxTicksLimit: 5, // Set the maximum number of ticks to 5
-          stepSize: 500, // Set the step size for y-axis values
+          stepSize: 20, // Set the step size for y-axis values
+          color:'#d3ddf5',
           callback: function (value, index, values) {
             return value === 0 ? '' : value + 'k'; // Add 'k' to values greater than zero
           },
-        },
-        grid: {
-          borderDash: [5, 5], // Show horizontal grid lines as dashed
+
         },
       },
     },
+    
     interaction: {
         intersect:false,
       },
@@ -68,6 +192,12 @@ const renderLineChart = (canvasRef) => {
         legend: {
             display: false
         },
+        tooltip: {
+            enabled: false,
+            position: 'nearest',
+            external: externalTooltipHandler,
+          },
+          
       },
     
   };
