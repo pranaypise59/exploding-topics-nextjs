@@ -39,11 +39,17 @@ const getOrCreateTooltip = (chart) => {
   
     return tooltipEl;
   };
-
-const externalTooltipHandler = (context) => {
-    // Tooltip Element
+  const externalTooltipHandler = (context) => {
     const { chart, tooltip } = context;
     const tooltipEl = getOrCreateTooltip(chart);
+
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return;
+  }console.log(tooltip,'hello tooltip')
+  const isTrendlineDataset = tooltip.dataPoints.length > 0 && tooltip.dataPoints[0]?.dataset?.label === "Trendline";
+
+ if(isTrendlineDataset)return;
   
     // Hide if no tooltip
     if (tooltip.opacity === 0) {
@@ -174,12 +180,13 @@ const trendlineValues = calculateLinearTrendline(chartValues);
       {
         label: 'Trendline',
         data: trendlineValues,
-        // borderColor: 'rgba(43, 66, 255, 0.3)',
         backgroundColor:'rgba(222,236,253,0.5)',
         fill: true,
         tension: 0.1,
         pointRadius: 0,
-        borderDash: [0, 5], // You can adjust the dash array for a dotted line
+        borderDash: [0, 5],
+        pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+        pointBorderColor: 'rgba(0, 0, 0, 0)',
       },
     ],
   };
