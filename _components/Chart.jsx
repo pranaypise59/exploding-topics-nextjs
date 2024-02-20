@@ -2,8 +2,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
-import { generateRandomArray } from '../_utils/helpers';
+import { generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from '../_utils/helpers';
+import chartTrendline from 'chartjs-plugin-trendline';
 
+Chart.register(chartTrendline);
 // Custom hook for managing the chart's canvas reference
 const useChartRef = () => {
   const canvasRef = useRef(null);
@@ -140,17 +142,44 @@ const externalTooltipHandler = (context) => {
 // Function to render line chart
 const renderLineChart = (canvasRef, chartValues) => {
   // Dummy data for the chart
+  // Function to calculate linear trendline values
+const calculateLinearTrendline = (data) => {
+  const n = data.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+  for (let i = 0; i < n; i++) {
+    sumX += i;
+    sumY += data[i];
+    sumXY += i * data[i];
+    sumX2 += i * i;
+  }
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  const trendline = data.map((_, i) => slope * i + intercept);
+  return trendline;
+};
+const trendlineValues = calculateLinearTrendline(chartValues);
   const data = {
     datasets: [
       {
         label: 'My Dataset',
-       data : chartValues,
-
-        borderColor: '#2e5ce5', // Blue color for the line
-        fill: false, // To have an unfilled line
+        data: chartValues,
+        borderColor: '#2e5ce5',
+        fill: false,
         tension: 0.1,
-        pointRadius: 1, // Adjust the size of dots
-        pointBackgroundColor: 'rgb(0, 0, 255)', // Blue color for the dots
+        pointRadius: 1,
+      },
+      {
+        label: 'Trendline',
+        data: trendlineValues,
+        // borderColor: 'rgba(43, 66, 255, 0.3)',
+        backgroundColor:'rgba(222,236,253,0.5)',
+        fill: true,
+        tension: 0.1,
+        pointRadius: 0,
+        borderDash: [0, 5], // You can adjust the dash array for a dotted line
       },
     ],
   };
@@ -216,7 +245,6 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
             position: 'nearest',
             external: externalTooltipHandler,
           },
-          
       },
     
   };
@@ -238,7 +266,8 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
 };
 
 // Functional component
-const ChartComponent = () => {
+const ChartComponent = ({topic}) => {
+  console.log(topic);
   const canvasRef = useChartRef();
   const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
@@ -246,8 +275,14 @@ const ChartComponent = () => {
 }, [canvasRef, chartValues]); // Include canvasRef in the dependencies array to ensure it's up-to-date
 
 useEffect(() => {
+  if(topic?.trend === 'up'){
+    setChartValues(generateRealisticUptrendArray(60));
+  }else if(topic?.trend === 'down'){
+    setChartValues(generateRealisticDowntrendArray(60));
+  }else{
     setChartValues(generateRandomArray(0, 500));
-  },[])
+  }
+  },[topic?.trend])
   return (
     <div className="tileChartContainer topicPageTileChartContainer">
       <div className="chartJsContainer">

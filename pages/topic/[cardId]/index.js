@@ -380,7 +380,7 @@ const Topic = () => {
                       <canvas height={150} width={300} id="canvas" />
                     </div>
                   </div> */}
-                  <ChartComponent/>
+                  <ChartComponent topic={topic}/>
                 </div>
                 <div className="tileTagsAndTrackButtonsContainer">
                   <div className="tileTagsContainer null">

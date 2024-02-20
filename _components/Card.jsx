@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState } from "react";
-import { generateRandomArray } from "../_utils/helpers";
+import { generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from "../_utils/helpers";
 import ChartPreview from "./PreviewChart";
 const CommonTileInfo = ({ label, volume, growth, description, chartValues, id }) => (
   <div className="tileInnerContainer">
@@ -49,12 +49,18 @@ const useChartRef = () => {
   const canvasRef = useRef(null);
   return canvasRef;
 };
-const Card = ({ label, volume, growth, description, isPro = false, id}) => {
+const Card = ({ label, volume, growth, description, isPro = false, id, trend}) => {
   const chartRef = useRef(null);
 
   const [ chartValues, setChartValues ] = useState([]);
   useEffect(() => {
-    setChartValues(generateRandomArray(100, 500));
+    if(trend === 'up'){
+      setChartValues(generateRealisticUptrendArray(60));
+    }else if(trend === 'down'){
+      setChartValues(generateRealisticDowntrendArray(60));
+    }else{
+      setChartValues(generateRandomArray(100, 500));
+    }
   }, [chartRef])
   const commonTileInfo = (
     <CommonTileInfo {...{ label, volume, growth, description, chartValues, id }} />

@@ -6,6 +6,7 @@ export const cardsData = [
         description: "Machine learning operations. A set of best practices in the machine learning development cycle.",
         isPro: false,
         id: "mlops",
+        trend: 'up',
       },
       {
         label: "Sea moss gummies",
@@ -14,6 +15,7 @@ export const cardsData = [
         description: "Vitamin supplements that are intended to promote thyroid health and weight loss.",
         isPro: false,
         id: "sea-moss-gummies",
+        // trend: 'up',
       },
       {
         label: "Ai logo generator",
@@ -22,6 +24,7 @@ export const cardsData = [
         description: "A software tool that uses artificial intelligence to generate custom logos for individuals and businesses, allowing them to quickly and easily create a unique brand identity.",
         isPro: false,
         id: "ai-logo-generator",
+        trend: 'down',
       },
       {
         label: "Ai image enhancer",
@@ -30,6 +33,7 @@ export const cardsData = [
         description: "Image modification software that improves image resolution, color, and detail.",
         isPro: false,
         id: "ai-image-enhancer",
+        trend: 'down',
       },
       {
         label: "Data lakehouse",
@@ -38,6 +42,7 @@ export const cardsData = [
         description: "Data solution concept combining 'data warehouse' and 'data lake'.",
         isPro: false,
         id: "data-lakehouse",
+        trend: 'up',
       },
       {
         label: "Loop earplugs",
@@ -70,6 +75,7 @@ export const cardsData = [
         description: "Adfbacdy tcct iceafecs mecfdg on fdbr lbbc, sbcbber to hdw an aeffbl wdecc. It hbeds idcfffe bceacba, rfafe of aebeaeeb, acd eceedccas cfbe mfdafec, ufebr ldcb, aed accb. Tefde aae deefcffat teads of Qdcbdaafbs ebeebdddf, iccaceeag wfcecag acd tcbedbee.",
         isPro: true,
         id: "qfbbcfdces",
+        trend: 'up',
       },
       {
         label: "Spacegoods",
@@ -94,6 +100,7 @@ export const cardsData = [
         description: "Prompt engineering is a technique used in artificial intelligence (AI), specifically in natural language processing (NLP). In prompt engineering, the description of a task is included in the input as a question, rather than being implied. This allows for a more explicit and accurate understanding of the task, improving the performance of the AI system.",
         isPro: false,
         id: "prompt-engineering",
+        trend: 'up',
       },
       {
         label: "Writesonic",
@@ -174,6 +181,7 @@ export const cardsData = [
         description: "Skincare products that treat hyperpigmentation and uneven skin tone.",
         isPro: false,
         id: "discoloration-serum",
+        trend:'down'
       },
       {
         label: "Artgrid",
