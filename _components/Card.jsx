@@ -2,7 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from "../_utils/helpers";
 import ChartPreview from "./PreviewChart";
-const CommonTileInfo = ({ label, volume, growth, description, chartValues, id }) => (
+
+import Link from "next/link";
+const CommonTileInfo = ({ label, volume, growth, description, chartValues, _id }) => (
   <div className="tileInnerContainer">
     <div className="tileTopInfoContainer">
       <div className="tileKeywordContainer">
@@ -27,7 +29,7 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, id })
     </div>
     <div className="tileChartContainer">
       <div className="chartJsContainer">
-        <ChartPreview chartValues={chartValues} id={id} />
+        <ChartPreview chartValues={chartValues} id={_id} />
       </div>
       <div className="tileBottomInfoContainer">
         <div className="tileDescription">{description}</div>
@@ -45,14 +47,11 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, id })
     </div>
   </div>
 );
-const useChartRef = () => {
-  const canvasRef = useRef(null);
-  return canvasRef;
-};
-const Card = ({ label, volume, growth, description, isPro = false, id, trend}) => {
-  const chartRef = useRef(null);
 
+const Card = ({ keyword_name, volume, growth, description, isPro = false, _id, trend}) => {
+  const chartRef = useRef(null);
   const [ chartValues, setChartValues ] = useState([]);
+
   useEffect(() => {
     if(trend === 'up'){
       setChartValues(generateRealisticUptrendArray(60));
@@ -62,22 +61,23 @@ const Card = ({ label, volume, growth, description, isPro = false, id, trend}) =
       setChartValues(generateRandomArray(100, 500));
     }
   }, [chartRef])
+
   const commonTileInfo = (
-    <CommonTileInfo {...{ label, volume, growth, description, chartValues, id }} />
+    <CommonTileInfo {...{ label: keyword_name, volume, growth, description, chartValues, _id }} />
   );
 
   return !isPro ? (
     <div className="tileStyle cardHover">
-      <a className="tileLink" href={`/topic/${id}`}>
+      <Link className="tileLink" href={`/topic/${_id}`}>
         {commonTileInfo}
-      </a>
+      </Link>
     </div>
   ) : (
     <div
       className="tileStyle cardHover"
       style={{ overflow: "hidden", filter: "blur(0)" }}
     >
-      <a className="tileLink" href="/pro">
+      <Link className="tileLink" href="/pro">
         <div className="proTopicTileOverlayContainer">
           <div className="proTopicTileTextContainer">
             <div className="proTopicTileTextLeftContainer">
@@ -122,7 +122,7 @@ const Card = ({ label, volume, growth, description, isPro = false, id, trend}) =
         <div className="tileInnerContainer proTopicTileBlur">
           {commonTileInfo}
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

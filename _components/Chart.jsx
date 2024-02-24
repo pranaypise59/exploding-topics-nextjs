@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
-import { generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from '../_utils/helpers';
+import { formatNumberInK, generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from '../_utils/helpers';
 import chartTrendline from 'chartjs-plugin-trendline';
 
 Chart.register(chartTrendline);
@@ -46,7 +46,7 @@ const getOrCreateTooltip = (chart) => {
   if (tooltip.opacity === 0) {
     tooltipEl.style.opacity = 0;
     return;
-  }console.log(tooltip,'hello tooltip')
+  }
   const isTrendlineDataset = tooltip.dataPoints.length > 0 && tooltip.dataPoints[0]?.dataset?.label === "Trendline";
 
  if(isTrendlineDataset)return;
@@ -96,7 +96,8 @@ const getOrCreateTooltip = (chart) => {
         td.style.borderWidth = 0;
   
         const numericPart = body[0].match(/[\d,]+/);
-        const bottomText = `${numericPart}K/mo`
+        const bottomText = `${formatNumberInK(numericPart[0])}/mo`;
+        console.log(numericPart[0], 'hello numeric part');
         const contentSpan = document.createElement('span');
         contentSpan.style.display = 'flex';
         contentSpan.style.alignItems = 'center';
@@ -146,8 +147,26 @@ const getOrCreateTooltip = (chart) => {
   };
   
 // Function to render line chart
-const renderLineChart = (canvasRef, chartValues) => {
-  // Dummy data for the chart
+const renderLineChart = (canvasRef, chartValues, trendData, rangeSelectedInYear ) => {
+  const monthsSet = [];
+  trendData?.forEach(entry => {
+    const date = new Date(entry.date);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('en-us', { month: 'short' });
+
+    // Exclude January
+    if (month !== 'Jan') {
+      monthsSet.push(month);
+    }else{
+      monthsSet.push(year);
+    }
+  // });
+});
+
+const monthsArray = Array.from(monthsSet);
+
+console.log(chartValues);
+console.log(monthsArray);
   // Function to calculate linear trendline values
 const calculateLinearTrendline = (data) => {
   const n = data.length;
@@ -273,23 +292,41 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
 };
 
 // Functional component
-const ChartComponent = ({topic}) => {
-  console.log(topic);
+const ChartComponent = ({topic, data, rangeSelectedInYear}) => {
   const canvasRef = useChartRef();
   const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
-    renderLineChart(canvasRef, chartValues);
+    renderLineChart(canvasRef, chartValues, data?.trend_data, rangeSelectedInYear);
 }, [canvasRef, chartValues]); // Include canvasRef in the dependencies array to ensure it's up-to-date
 
 useEffect(() => {
-  if(topic?.trend === 'up'){
-    setChartValues(generateRealisticUptrendArray(60));
-  }else if(topic?.trend === 'down'){
-    setChartValues(generateRealisticDowntrendArray(60));
-  }else{
-    setChartValues(generateRandomArray(0, 500));
+  if(data?.trend_data){
+    const values = data.trend_data.map((entry) => entry.value);
+    setChartValues(values.slice(0, 60));
+
+    const monthsSet = [];
+
+  data.trend_data.forEach(entry => {
+    const date = new Date(entry.date);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('en-us', { month: 'short' });
+
+    // Exclude January
+    if (month !== 'Jan') {
+      monthsSet.push(month);
+    }else{
+      monthsSet.push(year);
+    }
+
+  // });
+});
+
+const monthsArray = Array.from(monthsSet);
+
+console.log(monthsArray);
   }
-  },[topic?.trend])
+}, [data])
+
   return (
     <div className="tileChartContainer topicPageTileChartContainer">
       <div className="chartJsContainer">

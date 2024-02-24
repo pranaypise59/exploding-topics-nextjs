@@ -82,3 +82,16 @@ export function generateRandomArray(min, max) {
     return downtrendArray;
   };
   
+
+  export function formatNumberInK(number) {
+    // Remove commas from the input number
+    const sanitizedNumber = parseFloat(number.toString().replace(/,/g, ''));
+    const roundedNumber = Math.round(sanitizedNumber * 10) / 10; // Round to one decimal place
+  
+    if (roundedNumber >= 1000) {
+      return (roundedNumber / 1000).toFixed(1) + 'k';
+    }
+  
+    return roundedNumber.toFixed(1).toString();
+  }
+  

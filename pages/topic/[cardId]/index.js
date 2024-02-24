@@ -1,40 +1,83 @@
-
 import ChartComponent from "@/_components/Chart";
 import CustomTooltip from "@/_components/CustomTooltip";
 import RelatedTopics from "@/_components/RelatedTopics";
 import { cardsData } from "@/_utils/data";
+import { formatNumberInK } from "@/_utils/helpers";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Topic = () => {
-    const router = useRouter();
-    const { cardId } = router.query;
-    const topic = cardsData.find((card) => card.id === cardId);
+  const router = useRouter();
+  const { cardId } = router.query;
+  const topic = cardsData.find((card) => card.id === cardId);
+
+  const [rangeSelectedInYear, setRangeSelectedInYear] = useState('5Y');
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let url = process.env.REACT_APP_API_URL + `/explore/${cardId}`;
+
+        if (window.location.href.includes("localhost")) {
+          url = "http://localhost:8010/proxy" + `/explore/${cardId}`;
+        }
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFlYTY3MzgxNzFlYzNkODNhZjVkZWQiLCJpYXQiOjE3MDg1MjMxMTksImV4cCI6MTcwOTEyNzkxOX0.GLj0DriHZWnurnewqaF3vSrnhnp06-Qj3fumJcaU39c`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const result = await response.json();
+        setData(result.keyword);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (cardId) {
+      fetchData();
+    }
+  }, [cardId]);
   return (
     <div>
+      <Head>
+        <title>{data?.keyword_name}</title>
+      </Head>
       <div className="mainBod">
         <div className="grid_bg light_bg">
-          <Image src="/static/images/grid-line.svg" alt="grid-line" width={1200} height={1200}/>
+          <Image
+            src="/static/images/grid-line.svg"
+            alt="grid-line"
+            width={1200}
+            height={1200}
+          />
         </div>
         <div className="basicPageContainer padContainerBottom padContainerTop">
           <div className="narrowPageInnerContainer ">
             <div className="breadcrumbsContainer">
               <a className="breadcrumbsBackItem">Trends Database</a>
               <div className="breadcrumbsSlash">/</div>
-              <div className="breadcrumbsCurrentItem">{topic && topic.label}</div>
+              <div className="breadcrumbsCurrentItem">{data?.keyword_name}</div>
             </div>
             <div className="trendTopicHead groupButtons ">
               <div className="trendHeaderContainer">
                 <div className="trendTitleContainer">
                   <h1 className="trendTitle" style={{ display: "flex" }}>
-                    {topic ? topic.label : ''}
+                    {topic ? data?.keyword_name : ""}
                   </h1>
                 </div>
                 <div className="trendActionContainer " />
               </div>
               <div className="trendBriefDescription">
-                {topic ? topic.description : ''}
+                {topic ? topic.description : ""}
               </div>
             </div>
             <div className="trendPageTiles ">
@@ -341,10 +384,10 @@ const Topic = () => {
                           <span>
                             <div
                               className="mr-1"
-                              style={{marginTop:3}}
+                              style={{ marginTop: 3 }}
                               id="Tooltip-tooltipToggleButtons"
                             >
-                             <CustomTooltip text="Forecast predicts the growth of this trend over the next 12 months. Our forecasting uses a deep machine learning model trained on millions of data points."/>
+                              <CustomTooltip text="Forecast predicts the growth of this trend over the next 12 months. Our forecasting uses a deep machine learning model trained on millions of data points." />
                             </div>
                           </span>
                         </div>
@@ -354,7 +397,10 @@ const Topic = () => {
                       <div className="scoresContainer">
                         <div className="scoresInnerContainer">
                           <div className="scoreTag scoreTag--volume">
-                            <div className="scoreTagTop">{topic ? topic.volume : ''}</div>
+                            <div className="scoreTagTop">
+                              {data?.trend_data?.length > 0 && formatNumberInK(data?.trend_data[data?.trend_data?.length - 1].value)}
+                              {console.log(data,'hello data')}
+                            </div>
                             <div className="scoreTagBottom">
                               Volume
                               <CustomTooltip text="Global Google search volume for the previous full month. For example, a topic with 6.6K volume means there were 6,600 searches on Google for that keyword last month." />
@@ -362,11 +408,11 @@ const Topic = () => {
                           </div>
                           <div className="scoreTag last">
                             <div className="scoreTagTop growth scoreTagGradient">
-                            {topic ? topic.growth : ''}
+                              {topic ? topic.growth : ""}
                             </div>
                             <div className="scoreTagBottom">
-                              Growth                                
-                              <CustomTooltip text="We use our proprietary trend finding technology to identify trends early on. This data is updated daily. % growth represents growth over the time period selected."/>
+                              Growth
+                              <CustomTooltip text="We use our proprietary trend finding technology to identify trends early on. This data is updated daily. % growth represents growth over the time period selected." />
                             </div>
                           </div>
                         </div>
@@ -380,7 +426,7 @@ const Topic = () => {
                       <canvas height={150} width={300} id="canvas" />
                     </div>
                   </div> */}
-                  <ChartComponent topic={topic}/>
+                  <ChartComponent topic={topic} data={data}/>
                 </div>
                 <div className="tileTagsAndTrackButtonsContainer">
                   <div className="tileTagsContainer null">
