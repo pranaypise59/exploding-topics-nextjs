@@ -6,12 +6,14 @@ import RelatedTopics from "@/_components/RelatedTopics";
 import TimeFrameSelector from "@/_components/TimeFrameSelector";
 import { cardsData } from "@/_utils/data";
 import { calculatePercentageGrowth, formatNumberInK } from "@/_utils/helpers";
+import { useData } from "@/contexts/DataContext";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const Topic = () => {
+  const { globalData } = useData();
   const router = useRouter();
   const { cardId } = router.query;
   const topic = cardsData.find((card) => card.id === cardId);
@@ -204,71 +206,7 @@ const Topic = () => {
                   </a>
                 </div>
               </div>
-              {/* <div className="topicTileSkeleton ">
-                <div className="tile_skeleton project_tileSkeleton w_full">
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                  </div>
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                    <div className="pro_tile_row_right">
-                      <div>
-                        <div className="skeleton_line sk_thin" />
-                        <div className="skeleton_line sk_medium" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                    <div className="pro_tile_row_right">
-                      <div>
-                        <div className="skeleton_line sk_thin" />
-                        <div className="skeleton_line sk_medium" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                    <div className="pro_tile_row_right">
-                      <div>
-                        <div className="skeleton_line sk_thin" />
-                        <div className="skeleton_line sk_medium" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                    <div className="pro_tile_row_right">
-                      <div>
-                        <div className="skeleton_line sk_thin" />
-                        <div className="skeleton_line sk_medium" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pro_tile_row">
-                    <div className="pro_tile_row_left">
-                      <div className="skeleton_line sk_thick" />
-                    </div>
-                    <div className="pro_tile_row_right">
-                      <div>
-                        <div className="skeleton_line sk_thin" />
-                        <div className="skeleton_line sk_medium" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-              <RelatedTopics selectedTimeFrame={selectedTimeFrame}/>
+              <RelatedTopics selectedTimeFrame={selectedTimeFrame} globalData={globalData}/>
             </div>
           </div>
         </div>
