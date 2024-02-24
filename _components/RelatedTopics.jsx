@@ -1,23 +1,25 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import React from "react";
-import { generateRandomArray } from "../_utils/helpers";
-import { cardsData } from "../_utils/data";
 import Link from "next/link";
 import ChartPreview from "./PreviewChart";
+import { useData } from "@/contexts/DataContext";
+import { calculatePercentageGrowth, getVolumeFromData } from "@/_utils/helpers";
 
-const RelatedTopics = () => {
+const RelatedTopics = ({selectedTimeFrame}) => {
+  const { globalData } = useData();
+  console.log(globalData,'hello data')
   return (
     <>
       <div className="trendPageTileSectionContainer related ">
         <div className="topicPageSubheader">Related Topics</div>
         <div className="topicPageDivider" />
         {
-            cardsData.slice(0, 5).map((data) => (
-                <div key={data.label}>
+            globalData?.slice(0, 5).map((data) => (
+                <div key={data.keyword_name}>
                 <div>
-                  <Link className="wideShortTopicContainer" href={`/topic/${data.id}`}>
+                  <Link className="wideShortTopicContainer" href={`/topic/${data._id}`}>
                     <div className="wideShortTopicContainer">
-                      <div className="wideShortTopicKeyword">{data.label}</div>
+                      <div className="wideShortTopicKeyword">{data.keyword_name}</div>
                       <div class Name="wideShortChartJsContainer">
                         <div className="chartjs-size-monitor">
                           <div className="chartjs-size-monitor-expand">
@@ -27,14 +29,14 @@ const RelatedTopics = () => {
                             <div className="" />
                           </div>
                         </div>
-                        <ChartPreview chartValues={generateRandomArray(100, 500)} id={data.id} isSmall={true}/>
+                        <ChartPreview id={data._id} isSmall={true} trend_data={data.trend_data} selectedTimeFrame={selectedTimeFrame} />
                       </div>
                       <div className="trendScoresContainer">
                         <div className="scoresContainer">
                           <div className="scoresInnerContainer relatedScoresInnerContainer">
                             <div className="scoreTag">
                               <div className="scoreTagTop growth scoreTagGradient relatedTopicScoreTagTop">
-                                {data.growth}
+                              {data.trend_data.length > 0 && calculatePercentageGrowth(data.trend_data, selectedTimeFrame)}%
                               </div>
                               <div className="scoreTagBottom relatedTopicScoreTagBottom">
                                 Growth
@@ -42,7 +44,7 @@ const RelatedTopics = () => {
                             </div>
                             <div className="scoreTag last">
                               <div className="scoreTagTop relatedTopicScoreTagTop">
-                                {data.volume}
+                               {getVolumeFromData(data.trend_data)}
                               </div>
                               <div className="scoreTagBottom relatedTopicScoreTagBottom">
                                 Volume

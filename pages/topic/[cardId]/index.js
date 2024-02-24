@@ -5,7 +5,7 @@ import ProModal from "@/_components/ProModal";
 import RelatedTopics from "@/_components/RelatedTopics";
 import TimeFrameSelector from "@/_components/TimeFrameSelector";
 import { cardsData } from "@/_utils/data";
-import { formatNumberInK } from "@/_utils/helpers";
+import { calculatePercentageGrowth, formatNumberInK } from "@/_utils/helpers";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -83,13 +83,13 @@ const Topic = () => {
               <div className="trendHeaderContainer">
                 <div className="trendTitleContainer">
                   <h1 className="trendTitle" style={{ display: "flex" }}>
-                    {topic ? data?.keyword_name : ""}
+                    {data?.keyword_name}
                   </h1>
                 </div>
                 <div className="trendActionContainer " />
               </div>
               <div className="trendBriefDescription">
-                {topic ? topic.description : ""}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, nemo alias? Totam!
               </div>
             </div>
             <div className="trendPageTiles ">
@@ -144,7 +144,6 @@ const Topic = () => {
                           <div className="scoreTag scoreTag--volume">
                             <div className="scoreTagTop">
                               {data?.trend_data?.length > 0 && formatNumberInK(data?.trend_data[data?.trend_data?.length - 1].value)}
-                              {console.log(data,'hello data')}
                             </div>
                             <div className="scoreTagBottom">
                               Volume
@@ -153,7 +152,7 @@ const Topic = () => {
                           </div>
                           <div className="scoreTag last">
                             <div className="scoreTagTop growth scoreTagGradient">
-                              {topic ? topic.growth : ""}
+                            {data?.trend_data?.length > 0 && calculatePercentageGrowth(data?.trend_data, selectedTimeFrame)}%
                             </div>
                             <div className="scoreTagBottom">
                               Growth
@@ -269,7 +268,7 @@ const Topic = () => {
                   </div>
                 </div>
               </div> */}
-              <RelatedTopics />
+              <RelatedTopics selectedTimeFrame={selectedTimeFrame}/>
             </div>
           </div>
         </div>

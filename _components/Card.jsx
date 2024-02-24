@@ -1,25 +1,25 @@
 'use client';
-import React, { useEffect, useRef, useState } from "react";
-import { generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from "../_utils/helpers";
+import React from "react";
+import { calculatePercentageGrowth, getVolumeFromData } from "../_utils/helpers";
 import ChartPreview from "./PreviewChart";
 
 import Link from "next/link";
-const CommonTileInfo = ({ label, volume, growth, description, chartValues, _id }) => (
+const CommonTileInfo = ({ keyword_name, description, _id, trend_data, selectedTimeFrame }) => (
   <div className="tileInnerContainer">
     <div className="tileTopInfoContainer">
       <div className="tileKeywordContainer">
-        <div className="tileKeyword">{label}</div>
+        <div className="tileKeyword">{keyword_name}</div>
       </div>
       <div>
         <div className="scoresContainer">
           <div className="scoresInnerContainer">
             <div className="scoreTag scoreTag--volume">
-              <div className="scoreTagTop">{volume}</div>
+              <div className="scoreTagTop">{getVolumeFromData(trend_data)}</div>
               <div className="scoreTagBottom">Volume</div>
             </div>
             <div className="scoreTag last">
               <div className="scoreTagTop growth scoreTagGradient">
-                {growth}
+                {calculatePercentageGrowth(trend_data, selectedTimeFrame)}%
               </div>
               <div className="scoreTagBottom">Growth</div>
             </div>
@@ -29,7 +29,7 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, _id }
     </div>
     <div className="tileChartContainer">
       <div className="chartJsContainer">
-        <ChartPreview chartValues={chartValues} id={_id} />
+        <ChartPreview id={_id} trend_data={trend_data} selectedTimeFrame={selectedTimeFrame}/>
       </div>
       <div className="tileBottomInfoContainer">
         <div className="tileDescription">{description}</div>
@@ -48,25 +48,12 @@ const CommonTileInfo = ({ label, volume, growth, description, chartValues, _id }
   </div>
 );
 
-const Card = ({ keyword_name, volume, growth, description, isPro = false, _id, trend}) => {
-  const chartRef = useRef(null);
-  const [ chartValues, setChartValues ] = useState([]);
-
-  useEffect(() => {
-    if(trend === 'up'){
-      setChartValues(generateRealisticUptrendArray(60));
-    }else if(trend === 'down'){
-      setChartValues(generateRealisticDowntrendArray(60));
-    }else{
-      setChartValues(generateRandomArray(100, 500));
-    }
-  }, [chartRef])
-
+const Card = ({ keyword_name, _id, isProItem, trend_data, selectedTimeFrame}) => {
   const commonTileInfo = (
-    <CommonTileInfo {...{ label: keyword_name, volume, growth, description, chartValues, _id }} />
+    <CommonTileInfo {...{ keyword_name, _id, trend_data, selectedTimeFrame }} />
   );
 
-  return !isPro ? (
+  return !isProItem ? (
     <div className="tileStyle cardHover">
       <Link className="tileLink" href={`/topic/${_id}`}>
         {commonTileInfo}

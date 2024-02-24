@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import useFetchData from "@/_utils/useFetchData";
-import { filterTrendData, getDataForTimeFrame } from "@/_utils/helpers";
 
-const CardsContainer = () => {
+const CardsContainer = ({selectedTimeFrame}) => {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
   let url = process.env.REACT_APP_API_URL + `/explore`;
   if (currentUrl.includes("localhost")) {
@@ -21,9 +20,9 @@ const CardsContainer = () => {
     <>
       <div className="gridContainer">
         <div className="gridInstance">
-          {data?.map((data) => {
+          {data?.map((data, index) => {
             return(
-            <Card key={data.keyword_name} {...data} />
+            <Card key={data.keyword_name} {...data} selectedTimeFrame={selectedTimeFrame}/>
           )})}
         </div>
       </div>

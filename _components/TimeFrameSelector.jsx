@@ -5,10 +5,10 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame, setProModa
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const selectorContainerRef = useRef();
 
-  const changeTimeFrame = (timeFrame, isProfeature) => {
+  const changeTimeFrame = (timeFrame, isProfeature=false) => {
     if (isProfeature) {
       setIsMenuVisible(false);
-      setProModalVisible(true);
+      setProModalVisible(isProfeature);
       return;
     }
     setSelectedTimeFrame(timeFrame);

@@ -1,17 +1,36 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import { formatNumberInK, getDataForTimeFrame } from '@/_utils/helpers';
 
-const ChartPreview = ({ chartValues, id, isSmall }) => {
+const ChartPreview = ({ id, isSmall, trend_data, selectedTimeFrame }) => {
+  const dataToRender = getDataForTimeFrame(trend_data, selectedTimeFrame);
+  const valuesArray = dataToRender.map(entry => entry.value);
   const canvasRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
+  const monthsSet = [];
+  dataToRender?.forEach(entry => {
+    const date = new Date(entry.date);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('en-us', { month: 'short' });
+
+    // Exclude January
+    if (month !== 'Jan') {
+      monthsSet.push(month);
+    }else{
+      monthsSet.push(year);
+    }
+  // });
+});
+const monthsArray = Array.from(monthsSet);
+
   useEffect(() => {
-    const renderLineChart = (canvasRef, chartValues=[]) => {
+    const renderLineChart = (canvasRef) => {
       const data = {
         datasets: [
           {
             label: 'My Dataset',
-            data: chartValues,
+            data: valuesArray,
 
             borderColor: '#2e5ce5',
             fill: false,
@@ -22,14 +41,11 @@ const ChartPreview = ({ chartValues, id, isSmall }) => {
         ],
       };
 
-      const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-      const labels = ['', ...months, isSmall ? '' : '2020', ...months, isSmall ? '' : '2021', ...months, isSmall ? '' : '2023', ...months, isSmall ? '' : '2024', 'FEB'];
-
       const options = {
         scales: {
           x: {
             type: 'category',
-            labels: labels,
+            labels: monthsArray,
             grid: {
               display: false,
             },
@@ -40,8 +56,11 @@ const ChartPreview = ({ chartValues, id, isSmall }) => {
             ticks: {
               color: '#d3ddf5',
               callback: function (props) {
-                const display = [12, 24, 36, 48, 60];
-                return display.includes(props) ? labels[props] : null;
+                if(isSmall){
+                  return null;
+                }
+                const display = monthsArray.map((value, index) => typeof value === 'number' ? index : null).filter(index => index !== null);
+                return display.includes(props) ? monthsArray[props] : null; 
               },
             },
           },
@@ -56,10 +75,13 @@ const ChartPreview = ({ chartValues, id, isSmall }) => {
             },
             ticks: {
               maxTicksLimit: 5,
-              stepSize: Math.round(Math.max(...chartValues) / 6),
+              stepSize: Math.round(Math.max(...valuesArray) / 6),
               color: '#d3ddf5',
               callback: function (value, index, values) {
-                return value === 0 ? '' : value + 'k';
+                if(isSmall){
+                  return null;
+                }
+                return formatNumberInK(value);
               },
             },
           },
@@ -99,7 +121,7 @@ const ChartPreview = ({ chartValues, id, isSmall }) => {
       });
     };
 
-    renderLineChart(canvasRef, chartValues);
+    renderLineChart(canvasRef, valuesArray);
 
     return () => {
       // Cleanup function to destroy the chart instance when component unmounts
@@ -107,11 +129,11 @@ const ChartPreview = ({ chartValues, id, isSmall }) => {
         chartInstanceRef.current.destroy();
       }
     };
-  }, [chartValues, id]);
+  }, [canvasRef, selectedTimeFrame, id]);
 
   return (
     <div className="chartPreview">
-      <canvas height={ isSmall? 40: 150} width={isSmall ? 200 : 300} ref={canvasRef} id={id} />
+      <canvas height={ isSmall? 40: 150} width={isSmall ? 200 : 300} ref={canvasRef} id={id} style={{margin:'auto'}}/>
     </div>
   );
 };

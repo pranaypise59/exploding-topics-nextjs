@@ -145,10 +145,10 @@ const getOrCreateTooltip = (chart) => {
   };
   
 // Function to render line chart
-const renderLineChart = (canvasRef, chartValues, trendData, selectedTimeFrame ) => {
-  const monthsSet = [];
+const renderLineChart = (canvasRef, trendData, selectedTimeFrame ) => {
   const dataToRender = getDataForTimeFrame(trendData, selectedTimeFrame);
   const valuesArray = dataToRender.map(entry => entry.value);
+  const monthsSet = [];
   dataToRender?.forEach(entry => {
     const date = new Date(entry.date);
     const year = date.getFullYear();
@@ -225,7 +225,6 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
             color:'#d3ddf5',
             callback: function (props) {
                 const display = monthsArray.map((value, index) => typeof value === 'number' ? index : null).filter(index => index !== null);
-                console.log(monthsArray)
                 return display.includes(props) ? monthsArray[props] : null; 
               },
         },
@@ -242,7 +241,7 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
         // beginAtZero: true, // Start the y-axis from zero
         ticks: {
           maxTicksLimit: 5, // Set the maximum number of ticks to 5
-          stepSize: Math.round(Math.max(...chartValues)/6), // Set the step size for y-axis values as per the max value received for that chart
+          stepSize: Math.round(Math.max(...valuesArray)/6), // Set the step size for y-axis values as per the max value received for that chart
           color:'#d3ddf5',
           callback: function (value, index, values) {
             return formatNumberInK(value); // Add 'k' to values greater than zero
@@ -290,38 +289,10 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
 // Functional component
 const ChartComponent = ({data, selectedTimeFrame}) => {
   const canvasRef = useChartRef();
-  const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
-    renderLineChart(canvasRef, chartValues, data?.trend_data, selectedTimeFrame);
-}, [canvasRef, chartValues, selectedTimeFrame]); // Include canvasRef in the dependencies array to ensure it's up-to-date
+    renderLineChart(canvasRef, data?.trend_data, selectedTimeFrame);
+}, [canvasRef, selectedTimeFrame, data]); // Include canvasRef in the dependencies array to ensure it's up-to-date
 
-useEffect(() => {
-  if(data?.trend_data){
-    const values = data.trend_data.map((entry) => entry.value);
-    setChartValues(values.slice(0, 60));
-
-    const monthsSet = [];
-
-  data.trend_data.forEach(entry => {
-    const date = new Date(entry.date);
-    const year = date.getFullYear();
-    const month = date.toLocaleString('en-us', { month: 'short' });
-
-    // Exclude January
-    if (month !== 'Jan') {
-      monthsSet.push(month);
-    }else{
-      monthsSet.push(year);
-    }
-
-  // });
-});
-
-const monthsArray = Array.from(monthsSet);
-
-console.log(monthsArray);
-  }
-}, [data])
 
   return (
     <div className="tileChartContainer topicPageTileChartContainer">

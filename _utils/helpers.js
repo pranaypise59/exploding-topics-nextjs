@@ -170,3 +170,41 @@ export function getDataForTimeFrame(trend_data, timeFrame) {
 
   return indexOfStartingData !== -1 ? trend_data.slice(indexOfStartingData, -1) : [];
 }
+
+
+export function getVolumeFromData(trend_data) {
+  return trend_data?.length > 0 && formatNumberInK(trend_data[trend_data?.length - 1].value)
+}
+
+
+function calculatePercentageDifference(initialValue, newValue) {
+  const percentageDifference = ((newValue - initialValue) / initialValue) * 100;
+  return percentageDifference;
+}
+
+export function calculatePercentageGrowth(trend_data, timeframe) {
+  const numMonths = {
+    '3m': 4,
+    '6m': 7,
+    '1y': 13,
+    '2y': 25,
+    '5y': 61,
+    '10y': 121,
+    '15y': 181,
+  }[timeframe];
+
+  if (!numMonths) {
+    console.error('Invalid timeframe provided');
+    return [];
+  }
+
+  const currentvalue = trend_data.slice(-numMonths, -1);
+  const totalCurrentValue = currentvalue.reduce((sum, entry) => sum + entry.value, 0);
+
+  const prevValue = trend_data.slice((-numMonths - numMonths), -numMonths);
+  const totalPrevValue = prevValue.reduce((sum, entry) => sum + entry.value, 0);
+
+  const percentageDifference = calculatePercentageDifference(totalPrevValue, totalCurrentValue);
+
+  return Math.round(percentageDifference);
+}
