@@ -95,3 +95,36 @@ export function generateRandomArray(min, max) {
     return roundedNumber.toFixed(1).toString();
   }
   
+
+  import { useState, useEffect } from 'react';
+
+export const useDurationFormatter = (input) => {
+  const [formattedValue, setFormattedValue] = useState('');
+
+  useEffect(() => {
+    const formatDuration = (input) => {
+      if (!input) {
+        setFormattedValue('');
+        return;
+      }
+      const lowerCaseInput = input.toLowerCase();
+      const numericValue = parseInt(lowerCaseInput, 10);
+      if (isNaN(numericValue)) {
+        setFormattedValue('Invalid Input');
+        return;
+      }
+
+      if (lowerCaseInput.includes('y')) {
+        setFormattedValue(`${numericValue} ${numericValue === 1 ? 'Year' : 'Years'}`);
+      } else if (lowerCaseInput.includes('m')) {
+        setFormattedValue(`${numericValue} ${numericValue === 1 ? 'Month' : 'Months'}`);
+      } else {
+        setFormattedValue('Invalid Unit');
+      }
+    };
+
+    formatDuration(input);
+  }, [input]);
+
+  return formattedValue;
+};

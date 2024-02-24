@@ -1,7 +1,18 @@
 import Link from "next/link";
 import CardsContainer from "@/_components/CardsContainer";
+import TimeFrameSelector from "@/_components/TimeFrameSelector";
+import { useEffect, useState } from "react";
+import AllCategoriesSelector from "@/_components/AllCategoriesSelector";
 
 export default function Home() {
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState('5y');
+
+  useEffect(() => {
+    const storedTimeFrame = localStorage.getItem('selectedTimeFrame');
+    if(storedTimeFrame) {
+      setSelectedTimeFrame(storedTimeFrame);
+    }
+  }, []); // Empty dependency array to run only once on mount
   return (
     <>
       <div className="container topic_grid_sec c_dark_blue padContainerBottom ">
@@ -21,48 +32,12 @@ export default function Home() {
                 freeToProPeriodSelector"
                   >
                     <div className="trendDbPageButtonDropdown btn-group">
-                      <div className="dropdownFilterButton noselect">
-                        <span className="filterButtonText dropdownFilterButtonText no_space_wrap">
-                          5 years
-                        </span>
-                        <svg
-                          style={{ marginLeft: 14 }}
-                          width={14}
-                          height={8}
-                          viewBox="0 0 14 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M1 1L7 7L13 1"
-                            stroke="#A0A2AF"
-                            strokeLinecap="round"
-                          ></path>
-                        </svg>
-                      </div>
+                      <TimeFrameSelector selectedTimeFrame={selectedTimeFrame} setSelectedTimeFrame={setSelectedTimeFrame}/>
                     </div>
                   </div>
                   <div className="filterContainer periodFilterContainer">
                     <div className="trendDbPageButtonDropdown btn-group">
-                      <div className="dropdownFilterButton noselect">
-                        <span className="filterButtonText dropdownFilterButtonText">
-                          All Categories
-                        </span>
-                        <svg
-                          style={{ marginLeft: 14 }}
-                          width={14}
-                          height={8}
-                          viewBox="0 0 14 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M1 1L7 7L13 1"
-                            stroke="#A0A2AF"
-                            strokeLinecap="round"
-                          ></path>
-                        </svg>
-                      </div>
+                      <AllCategoriesSelector/>
                     </div>
                   </div>
                 </div>
