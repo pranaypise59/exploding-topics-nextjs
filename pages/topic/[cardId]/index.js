@@ -166,7 +166,7 @@ const Topic = () => {
                       <canvas height={150} width={300} id="canvas" />
                     </div>
                   </div> */}
-                  <ChartComponent topic={topic} data={data}/>
+                  <ChartComponent data={data} selectedTimeFrame={selectedTimeFrame}/>
                 </div>
                 <div className="tileTagsAndTrackButtonsContainer">
                   <div className="tileTagsContainer null">

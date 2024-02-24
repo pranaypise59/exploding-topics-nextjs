@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
-import { formatNumberInK, generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray } from '../_utils/helpers';
+import { formatNumberInK, generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray, getDataForTimeFrame } from '../_utils/helpers';
 import chartTrendline from 'chartjs-plugin-trendline';
 
 Chart.register(chartTrendline);
@@ -147,9 +147,11 @@ const getOrCreateTooltip = (chart) => {
   };
   
 // Function to render line chart
-const renderLineChart = (canvasRef, chartValues, trendData, rangeSelectedInYear ) => {
+const renderLineChart = (canvasRef, chartValues, trendData, selectedTimeFrame ) => {
   const monthsSet = [];
-  trendData?.forEach(entry => {
+  const dataToRender = getDataForTimeFrame(trendData, selectedTimeFrame);
+  const valuesArray = dataToRender.map(entry => entry.value);
+  dataToRender?.forEach(entry => {
     const date = new Date(entry.date);
     const year = date.getFullYear();
     const month = date.toLocaleString('en-us', { month: 'short' });
@@ -162,11 +164,8 @@ const renderLineChart = (canvasRef, chartValues, trendData, rangeSelectedInYear 
     }
   // });
 });
-
 const monthsArray = Array.from(monthsSet);
 
-console.log(chartValues);
-console.log(monthsArray);
   // Function to calculate linear trendline values
 const calculateLinearTrendline = (data) => {
   const n = data.length;
@@ -185,12 +184,12 @@ const calculateLinearTrendline = (data) => {
   const trendline = data.map((_, i) => slope * i + intercept);
   return trendline;
 };
-const trendlineValues = calculateLinearTrendline(chartValues);
+const trendlineValues = calculateLinearTrendline(valuesArray);
   const data = {
     datasets: [
       {
         label: 'My Dataset',
-        data: chartValues,
+        data: valuesArray,
         borderColor: '#2e5ce5',
         fill: false,
         tension: 0.1,
@@ -218,7 +217,7 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
         
       x: {
         type: 'category',
-        labels: labels,
+        labels: monthsArray,
         grid: {
           display: false,
         },
@@ -230,7 +229,7 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
             color:'#d3ddf5',
             callback: function (props) {
                 const display = [12, 24, 36, 48, 60]
-                return display.includes(props) ? labels[props] : null; // Add 'k' to values greater than zero
+                return display.includes(props) ? labels[props] : null; 
               },
         },
       },
@@ -249,7 +248,7 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
           stepSize: Math.round(Math.max(...chartValues)/6), // Set the step size for y-axis values as per the max value received for that chart
           color:'#d3ddf5',
           callback: function (value, index, values) {
-            return value === 0 ? '' : value + 'k'; // Add 'k' to values greater than zero
+            return formatNumberInK(value); // Add 'k' to values greater than zero
           },
 
         },
@@ -292,12 +291,12 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
 };
 
 // Functional component
-const ChartComponent = ({topic, data, rangeSelectedInYear}) => {
+const ChartComponent = ({data, selectedTimeFrame}) => {
   const canvasRef = useChartRef();
   const [chartValues, setChartValues] = useState([]);
   useEffect(() => {
-    renderLineChart(canvasRef, chartValues, data?.trend_data, rangeSelectedInYear);
-}, [canvasRef, chartValues]); // Include canvasRef in the dependencies array to ensure it's up-to-date
+    renderLineChart(canvasRef, chartValues, data?.trend_data, selectedTimeFrame);
+}, [canvasRef, chartValues, selectedTimeFrame]); // Include canvasRef in the dependencies array to ensure it's up-to-date
 
 useEffect(() => {
   if(data?.trend_data){

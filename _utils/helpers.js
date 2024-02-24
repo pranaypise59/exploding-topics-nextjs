@@ -128,3 +128,45 @@ export const useDurationFormatter = (input) => {
 
   return formattedValue;
 };
+
+function getIndexByMonthYear(data, targetMonth, targetYear) {
+  return data.findIndex((item) => {
+    const date = new Date(item.date);
+    const month = date.getMonth() + 1; // Months are zero-indexed
+    const year = date.getFullYear();
+
+    return month === targetMonth && year === targetYear;
+  });
+}
+
+export function getDataForTimeFrame(trend_data, timeFrame) {
+  if (!trend_data || !Array.isArray(trend_data) || trend_data.length === 0) {
+    return [];
+  }
+
+  const lastElement = trend_data[trend_data.length - 1];
+  const lastYear = new Date(lastElement.date).getFullYear();
+
+  let startYear;
+  switch (timeFrame) {
+    case '3m':
+      return trend_data.slice(-4, -1);
+    case '6m':
+      return trend_data.slice(-7, -1);
+    case '1y':
+      return trend_data.slice(-13, -1);
+    case '2y':
+    case '5y':
+    case '10y':
+    case '15y':
+      startYear = lastYear - parseInt(timeFrame);
+      break;
+    default:
+      return [];
+  }
+
+  const targetMonth = 3; // March
+  const indexOfStartingData = getIndexByMonthYear(trend_data, targetMonth, startYear);
+
+  return indexOfStartingData !== -1 ? trend_data.slice(indexOfStartingData, -1) : [];
+}

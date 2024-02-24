@@ -215,7 +215,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
             <button
               type="button"
               tabIndex={0}
-              className="filterItemWithProjection dropdown-item"
+              className={`filterItemWithProjection dropdown-item ${ selectedTimeFrame === "2y" ? "filterItemWithProjectionActive" : ""}`}
               onClick={()=>changeTimeFrame("2y")}
             >
               2 years
@@ -223,7 +223,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
             <button
               type="button"
               tabIndex={0}
-              className="filterItemWithProjection filterItemWithProjectionActive dropdown-item"
+              className={`filterItemWithProjection dropdown-item ${ selectedTimeFrame === "5y" ? "filterItemWithProjectionActive" : ""}`}
               onClick={()=>changeTimeFrame("5y")}
             >
               5 years
@@ -231,7 +231,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
             <button
               type="button"
               tabIndex={0}
-              className="filterItemWithProjection dropdown-item"
+              className={`filterItemWithProjection dropdown-item ${ selectedTimeFrame === "10y" ? "filterItemWithProjectionActive" : ""}`}
               onClick={()=>changeTimeFrame("10y")}
             >
               10 years
@@ -239,7 +239,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
             <button
               type="button"
               tabIndex={0}
-              className="filterItemWithProjection dropdown-item"
+              className={`filterItemWithProjection dropdown-item ${ selectedTimeFrame === "15y" ? "filterItemWithProjectionActive" : ""}`}
               onClick={()=>changeTimeFrame("15y")}
             >
               15 years

@@ -2,8 +2,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
-import { cardsData } from "../_utils/data";
 import useFetchData from "@/_utils/useFetchData";
+import { filterTrendData, getDataForTimeFrame } from "@/_utils/helpers";
 
 const CardsContainer = () => {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -16,6 +16,7 @@ const CardsContainer = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
+
   return (
     <>
       <div className="gridContainer">
