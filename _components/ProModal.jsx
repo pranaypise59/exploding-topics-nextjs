@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
-const ProModal = () => {
+const ProModal = ({ setProModalVisible }) => {
+  const modalRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setProModalVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setProModalVisible]);
+
   return (
     <>
       <div className="projectModalBackgroundOverlay">
-        <div className="projectModalContainer">
-          <div className="projectModalCloseBtn">
+        <div ref={modalRef} className="projectModalContainer">
+          <div
+            className="projectModalCloseBtn"
+            onClick={() => {
+              setProModalVisible(false);
+            }}
+          >
             <svg width={15} height={15} viewBox="0 0 15 15" fill="none">
               <path
                 d="M1 1L7.5 7.5M7.5 7.5L1 14M7.5 7.5L14 14M7.5 7.5L14 1"
@@ -102,7 +123,13 @@ const ProModal = () => {
               <a className="proTopicTileButton" href="/pro">
                 Learn More
               </a>
-              <span href="#" className="btn">
+              <span
+                href="#"
+                className="btn"
+                onClick={() => {
+                  setProModalVisible(false);
+                }}
+              >
                 No Thanks
               </span>
             </div>

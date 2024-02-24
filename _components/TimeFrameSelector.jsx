@@ -1,17 +1,37 @@
 import { useDurationFormatter } from "@/_utils/helpers";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
+const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame, setProModalVisible }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const selectorContainerRef = useRef();
 
-  const changeTimeFrame = (timeFrame) => {
+  const changeTimeFrame = (timeFrame, isProfeature) => {
+    if (isProfeature) {
+      setIsMenuVisible(false);
+      setProModalVisible(true);
+      return;
+    }
     setSelectedTimeFrame(timeFrame);
     setIsMenuVisible(false);
     localStorage.setItem('selectedTimeFrame', timeFrame);
-  }
-  
+  };
+
+  const handleClickOutside = (event) => {
+    if (selectorContainerRef.current && !selectorContainerRef.current.contains(event.target)) {
+      setIsMenuVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-      <div className="trendPagePeriodSelectorContainer" style={{width: "100%"}}>
+    <div ref={selectorContainerRef} className="trendPagePeriodSelectorContainer" style={{ width: "100%" }}>
         <div className="btn-group">
           <button
             type="button"
@@ -67,7 +87,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
                   </div>
                 </span>
               </div>
-              <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('1y')}>
+              <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('1y', true)}>
                 <button type="button" tabIndex={0} className="dropdown-item">
                   1 year
                 </button>
@@ -122,7 +142,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
                 </div>
               </span>
             </div>
-            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('3m')}>
+            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('3m', true)}>
               <button type="button" tabIndex={0} className="dropdown-item">
                 3 months
               </button>
@@ -152,7 +172,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
                 </defs>
               </svg>
             </div>
-            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('6m')}>
+            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('6m', true)}>
               <button type="button" tabIndex={0} className="dropdown-item">
                 6 months
               </button>
@@ -182,7 +202,7 @@ const TimeFrameSelector = ({ selectedTimeFrame, setSelectedTimeFrame }) => {
                 </defs>
               </svg>
             </div>
-            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('1y')}>
+            <div className="filterItemWithProjection freeToProItems" onClick={() => changeTimeFrame('1y', true)}>
               <button type="button" tabIndex={0} className="dropdown-item">
                 1 year
               </button>

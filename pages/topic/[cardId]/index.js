@@ -1,6 +1,7 @@
 'use client';
 import ChartComponent from "@/_components/Chart";
 import CustomTooltip from "@/_components/CustomTooltip";
+import ProModal from "@/_components/ProModal";
 import RelatedTopics from "@/_components/RelatedTopics";
 import TimeFrameSelector from "@/_components/TimeFrameSelector";
 import { cardsData } from "@/_utils/data";
@@ -16,6 +17,7 @@ const Topic = () => {
   const topic = cardsData.find((card) => card.id === cardId);
 
   const [selectedTimeFrame, setSelectedTimeFrame] = useState('5y');
+  const [proModalVisible, setProModalVisible] = useState(false);
 
   useEffect(() => {
     const storedTimeFrame = localStorage.getItem('selectedTimeFrame');
@@ -91,13 +93,16 @@ const Topic = () => {
               </div>
             </div>
             <div className="trendPageTiles ">
+              {proModalVisible && <div className="freeToProUpsellModal">
+                <ProModal setProModalVisible={setProModalVisible}/>
+              </div>}
               <div className="trendPageTileSectionContainer  nonProChartToggle">
                 <div>
                   <div className="topicScoresAndPeriodSelectorContainer  nonProChartToggle ">
                     <div className="chartToggleWrap">
-                     <TimeFrameSelector selectedTimeFrame={selectedTimeFrame} setSelectedTimeFrame={setSelectedTimeFrame}/>
+                     <TimeFrameSelector setProModalVisible={setProModalVisible} selectedTimeFrame={selectedTimeFrame} setSelectedTimeFrame={setSelectedTimeFrame}/>
                       <div className="chartForecastToggle ">
-                        <div className="customToggleWrapper">
+                        <div className="customToggleWrapper" onClick={() => setProModalVisible(true)}>
                           <label className="customToggle">
                             <p>
                               <svg
