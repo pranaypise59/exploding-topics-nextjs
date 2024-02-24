@@ -124,7 +124,7 @@ const Topic = () => {
                           <span>
                             <div
                               className="mr-1"
-                              style={{ marginTop: 3 }}
+                              style={{ marginTop: 6 }}
                               id="Tooltip-tooltipToggleButtons"
                             >
                               <CustomTooltip text="Forecast predicts the growth of this trend over the next 12 months. Our forecasting uses a deep machine learning model trained on millions of data points." />

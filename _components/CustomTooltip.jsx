@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 
-const CustomTooltip = ({ text, color }) => {
+const CustomTooltip = ({ text }) => {
   const [isVisible, setIsVisible] = useState(false);
   const tooltipRef = useRef(null);
 
@@ -15,7 +15,7 @@ const CustomTooltip = ({ text, color }) => {
 
   return (
     <div
-      className="relative inline-block"
+      style={{position: "relative"}}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -26,6 +26,8 @@ const CustomTooltip = ({ text, color }) => {
           width={12}
           height={12}
           viewBox="0 0 12 12"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >

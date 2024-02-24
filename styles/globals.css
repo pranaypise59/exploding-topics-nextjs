@@ -42983,7 +42983,15 @@ input.noAutofillStyle:focus-within:-webkit-autofill {
 .customTooltipHelp{
 left: 50%;
 transform:translateX(-47%);
-top: 20px;
+top: 23px;
+position: absolute;
+background-color: #121737;
+width: 200px;
+font-size: 12px;
+line-height: 1.5;
+font-weight: 100;
+max-width: 80vw;
+z-index: 999999999;
 }
 
 .customTooltipHelp::before{

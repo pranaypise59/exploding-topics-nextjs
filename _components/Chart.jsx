@@ -2,10 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
-import { formatNumberInK, generateRandomArray, generateRealisticDowntrendArray, generateRealisticUptrendArray, getDataForTimeFrame } from '../_utils/helpers';
-import chartTrendline from 'chartjs-plugin-trendline';
+import { formatNumberInK, getDataForTimeFrame } from '../_utils/helpers';
 
-Chart.register(chartTrendline);
 // Custom hook for managing the chart's canvas reference
 const useChartRef = () => {
   const canvasRef = useRef(null);
@@ -208,9 +206,7 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
       },
     ],
   };
-const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-  // Options for the chart
-  const labels = ['', ...months ,'2020', ...months, '2021', ...months, '2023', ...months,'2024', 'FEB']
+
   const options = {  
       
     scales: {
@@ -228,8 +224,9 @@ const months = ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', '
             // maxTicksLimit: 7,
             color:'#d3ddf5',
             callback: function (props) {
-                const display = [12, 24, 36, 48, 60]
-                return display.includes(props) ? labels[props] : null; 
+                const display = monthsArray.map((value, index) => typeof value === 'number' ? index : null).filter(index => index !== null);
+                console.log(monthsArray)
+                return display.includes(props) ? monthsArray[props] : null; 
               },
         },
       },
