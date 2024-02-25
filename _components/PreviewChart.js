@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
-import { formatNumberInK, getDataForTimeFrame } from '@/_utils/helpers';
+import { calculateLinearTrendline, formatNumberInK, getDataForTimeFrame } from '@/_utils/helpers';
 
 const ChartPreview = ({ id, isSmall, trend_data, selectedTimeFrame }) => {
   const dataToRender = getDataForTimeFrame(trend_data, selectedTimeFrame);
@@ -23,6 +23,7 @@ const ChartPreview = ({ id, isSmall, trend_data, selectedTimeFrame }) => {
   // });
 });
 const monthsArray = Array.from(monthsSet);
+const trendlineValues = calculateLinearTrendline(valuesArray);
 
   useEffect(() => {
     const renderLineChart = (canvasRef) => {
@@ -36,7 +37,21 @@ const monthsArray = Array.from(monthsSet);
             fill: false,
             tension: 0.1,
             pointRadius: 0,
-            // pointBackgroundColor: 'rgb(0, 0, 255)',
+            borderRadius:2,
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+            pointBorderColor: 'rgba(0, 0, 0, 0)',
+          },
+          {
+            label: 'Trendline',
+            data: trendlineValues,
+            backgroundColor:'rgba(222,236,253,0.5)',
+            fill: true,
+            tension: 0.1,
+            pointRadius: 0,
+            borderDash: [0, 5],
+            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+            pointBorderColor: 'rgba(0, 0, 0, 0)',
           },
         ],
       };

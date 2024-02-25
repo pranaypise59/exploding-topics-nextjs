@@ -48,12 +48,12 @@ const CommonTileInfo = ({ keyword_name, description, _id, trend_data, selectedTi
   </div>
 );
 
-const Card = ({ keyword_name, _id, isProItem, trend_data, selectedTimeFrame}) => {
+const Card = ({ keyword_name, _id, isProItem, trend_data, selectedTimeFrame, index}) => {
   const commonTileInfo = (
     <CommonTileInfo {...{ keyword_name, _id, trend_data, selectedTimeFrame }} />
   );
 
-  return !isProItem ? (
+  return !isProItem && !(index === 4) ? (
     <div className="tileStyle cardHover">
       <Link className="tileLink" href={`/topic/${_id}`}>
         {commonTileInfo}

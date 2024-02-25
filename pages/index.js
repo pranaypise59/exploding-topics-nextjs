@@ -120,16 +120,15 @@ export default function Home() {
               </svg>
             </Link>
             <div className="pagerButton selectedPagerButton">1</div>
-            <a className="pagerButton" href="/topics?page=2">
+            {/* <a className="pagerButton" href="/topics?page=2">
               2
             </a>
             <a className="pagerButton" href="/topics?page=3">
               3
-            </a>
-            <a
+            </a> */}
+            <div
               className="pagerButton"
               style={{ display: "flex", marginRight: 0 }}
-              href="/topics?page=2"
             >
               <svg
                 width={8}
@@ -144,7 +143,7 @@ export default function Home() {
                   strokeLinecap="round"
                 />
               </svg>
-            </a>
+            </div>
           </div>
         </div>
       </div>

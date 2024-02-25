@@ -83,6 +83,24 @@ export function generateRandomArray(min, max) {
   };
   
 
+  export function calculateLinearTrendline(data){
+    const n = data.length;
+    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+  
+    for (let i = 0; i < n; i++) {
+      sumX += i;
+      sumY += data[i];
+      sumXY += i * data[i];
+      sumX2 += i * i;
+    }
+  
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+  
+    const trendline = data.map((_, i) => slope * i + intercept);
+    return trendline;
+  };
+
   export function formatNumberInK(number) {
     // Remove commas from the input number
     const sanitizedNumber = parseFloat(number.toString().replace(/,/g, ''));

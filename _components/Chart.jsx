@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import CustomTooltip from './CustomTooltip';
-import { formatNumberInK, getDataForTimeFrame } from '../_utils/helpers';
+import { calculateLinearTrendline, formatNumberInK, getDataForTimeFrame } from '../_utils/helpers';
 
 // Custom hook for managing the chart's canvas reference
 const useChartRef = () => {
@@ -164,24 +164,6 @@ const renderLineChart = (canvasRef, trendData, selectedTimeFrame ) => {
 });
 const monthsArray = Array.from(monthsSet);
 
-  // Function to calculate linear trendline values
-const calculateLinearTrendline = (data) => {
-  const n = data.length;
-  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-
-  for (let i = 0; i < n; i++) {
-    sumX += i;
-    sumY += data[i];
-    sumXY += i * data[i];
-    sumX2 += i * i;
-  }
-
-  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-  const intercept = (sumY - slope * sumX) / n;
-
-  const trendline = data.map((_, i) => slope * i + intercept);
-  return trendline;
-};
 const trendlineValues = calculateLinearTrendline(valuesArray);
   const data = {
     datasets: [

@@ -22,7 +22,7 @@ const CardsContainer = ({selectedTimeFrame}) => {
         <div className="gridInstance">
           {data?.map((data, index) => {
             return(
-            <Card key={data.keyword_name} {...data} selectedTimeFrame={selectedTimeFrame}/>
+            <Card key={data.keyword_name} {...data} index={index} selectedTimeFrame={selectedTimeFrame}/>
           )})}
         </div>
       </div>
