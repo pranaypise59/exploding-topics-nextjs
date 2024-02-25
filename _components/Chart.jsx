@@ -95,7 +95,6 @@ const getOrCreateTooltip = (chart) => {
   
         const numericPart = body[0].match(/[\d,]+/);
         const bottomText = `${formatNumberInK(numericPart[0])}/mo`;
-        console.log(numericPart[0], 'hello numeric part');
         const contentSpan = document.createElement('span');
         contentSpan.style.display = 'flex';
         contentSpan.style.alignItems = 'center';
@@ -234,17 +233,18 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
     },
     
     interaction: {
-        intersect:false,
-      },
+      mode: 'index',
+      intersect: false,
+    },
       plugins: {
-        tooltip: {
-          enabled: true,
-        },
         legend: {
             display: false
         },
         tooltip: {
             enabled: false,
+            filter: function (tooltipItem) {
+                return tooltipItem.datasetIndex === 1 ? false : true;
+            },
             position: 'nearest',
             external: externalTooltipHandler,
           },

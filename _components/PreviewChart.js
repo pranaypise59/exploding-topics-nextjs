@@ -57,6 +57,11 @@ const trendlineValues = calculateLinearTrendline(valuesArray);
       };
 
       const options = {
+        layout:{
+          padding: {
+            top: 3,
+          },
+        },
         scales: {
           x: {
             type: 'category',
