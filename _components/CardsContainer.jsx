@@ -13,7 +13,14 @@ const CardsContainer = ({selectedTimeFrame}) => {
   const { data, error, loading } = useFetchData(url);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div class="skeleton-loader-container">
+    <div class="skeleton-loader-background"></div>
+    <div class="skeleton-loader-background"></div>
+    <div class="skeleton-loader-background"></div>
+    <div class="skeleton-loader-background"></div>
+    <div class="skeleton-loader-background"></div>
+    <div class="skeleton-loader-background"></div>
+    </div>;
   }
 
   return (

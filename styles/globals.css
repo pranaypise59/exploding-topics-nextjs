@@ -17681,7 +17681,33 @@ pre {
     background-position: -150% -150%
   }
 }
-
+.skeleton-loader-container{
+display: flex;
+justify-content: center;
+align-items: center;
+flex-wrap: wrap;
+gap: 20px;
+margin-bottom: 40px;
+}
+.skeleton-loader-background{
+  height: 550px;
+  width:30%;
+  min-width: 300px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%);
+  background-size: 150% 100%;
+  animation: shine 1.5s linear infinite;
+  position:'relative',
+}
+.skeleton-loader-background::before{
+  content: '';
+  position: absolute;
+  height: fit-content;
+  width:22.5%;
+  min-width: 300px;
+  height:350px;
+  background: #f0f3f7;
+  z-index: -1;
+}
 .tileChartContainer {
   position: relative
 }
