@@ -37,7 +37,7 @@ const Topic = () => {
       try {
         let url = process.env.REACT_APP_API_URL + `/explore/${cardId}`;
 
-        if (window.location.href.includes("localhost")) {
+        if (window.location.href.includes("localhost") || window.location.href.includes("ngrok"))  {
           url = "http://localhost:8010/proxy" + `/explore/${cardId}`;
         }
 

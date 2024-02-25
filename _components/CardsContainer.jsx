@@ -7,7 +7,7 @@ import useFetchData from "@/_utils/useFetchData";
 const CardsContainer = ({selectedTimeFrame}) => {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
   let url = process.env.REACT_APP_API_URL + `/explore`;
-  if (currentUrl.includes("localhost")) {
+  if (currentUrl.includes("localhost") || currentUrl.includes("ngrok")) {
     url = "http://localhost:8010/proxy" + `/explore`;
   }
   const { data, error, loading } = useFetchData(url);

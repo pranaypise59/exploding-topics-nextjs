@@ -39,7 +39,7 @@ export const DataProvider = ({ children }) => {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   let url = process.env.REACT_APP_API_URL + `/explore`;
-  if (currentUrl.includes("localhost")) {
+  if (currentUrl.includes("localhost") || currentUrl.includes("ngrok")) {
     url = "http://localhost:8010/proxy" + `/explore`;
   };
   
